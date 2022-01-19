@@ -35,4 +35,17 @@ public class UserService {
 		repository.deleteById(id);
 	}
 	
+	public User update(Long id, User obj) {
+		//getOne prepara o objeto ao invés de ir até o banco de dados e pegar o id, fazendo assim ser mais eficiente o método.
+		User entity = repository.getOne(id); 
+		updateData(entity,obj);
+		return repository.save(entity);
+	}
+
+	private void updateData(User entity, User obj) {
+		entity.setName(obj.getName());
+		entity.setEmail(obj.getEmail());
+		entity.setPhone(obj.getPhone());
+	}
+	
 }
