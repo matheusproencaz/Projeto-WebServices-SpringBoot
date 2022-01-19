@@ -3,6 +3,8 @@ package com.example.aula308ProjetoWebServicesSpringBoot.services;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -46,9 +48,15 @@ public class UserService {
 	}
 	//getOne prepara o objeto ao invés de ir até o banco de dados e pegar o id, fazendo assim ser mais eficiente o método.
 	public User update(Long id, User obj) {
-		User entity = repository.getOne(id); 
-		updateData(entity,obj);
-		return repository.save(entity);
+		try {
+			@SuppressWarnings("deprecation")
+			User entity = repository.getOne(id); 
+			updateData(entity,obj);
+			return repository.save(entity);
+		}catch(EntityNotFoundException e) {
+			throw new ResourceNotFoundException(id);
+		}
+		
 	}
 
 	private void updateData(User entity, User obj) {
