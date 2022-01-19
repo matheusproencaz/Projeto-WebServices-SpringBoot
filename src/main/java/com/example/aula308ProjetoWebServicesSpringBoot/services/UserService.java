@@ -4,10 +4,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.example.aula308ProjetoWebServicesSpringBoot.entities.User;
 import com.example.aula308ProjetoWebServicesSpringBoot.repositories.UserRepository;
+import com.example.aula308ProjetoWebServicesSpringBoot.services.exceptions.DatabaseException;
 import com.example.aula308ProjetoWebServicesSpringBoot.services.exceptions.ResourceNotFoundException;
 
 //Component registration - para o UserService funcionar é preciso colocar uma anotação (@) antes da classe de Serviço.
@@ -33,7 +36,13 @@ public class UserService {
 	}
 	
 	public void delete(Long id) {
+		try {
 		repository.deleteById(id);
+		}catch(EmptyResultDataAccessException e) {
+			throw new ResourceNotFoundException(id);
+		} catch(DataIntegrityViolationException e) {
+			throw new DatabaseException(e.getMessage());
+		}
 	}
 	//getOne prepara o objeto ao invés de ir até o banco de dados e pegar o id, fazendo assim ser mais eficiente o método.
 	public User update(Long id, User obj) {
