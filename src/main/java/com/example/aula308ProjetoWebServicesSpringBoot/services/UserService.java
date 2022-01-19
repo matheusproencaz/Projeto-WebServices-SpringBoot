@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.aula308ProjetoWebServicesSpringBoot.entities.User;
 import com.example.aula308ProjetoWebServicesSpringBoot.repositories.UserRepository;
+import com.example.aula308ProjetoWebServicesSpringBoot.services.exceptions.ResourceNotFoundException;
 
 //Component registration - para o UserService funcionar é preciso colocar uma anotação (@) antes da classe de Serviço.
 //As anotaçõe são: @Component @Repository @Service
@@ -24,7 +25,7 @@ public class UserService {
 	
 	public User findById(Long id) {
 		Optional<User> obj = repository.findById(id);
-		return obj.get();
+		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
 	}
 	
 	public User insert(User obj) {
@@ -34,9 +35,8 @@ public class UserService {
 	public void delete(Long id) {
 		repository.deleteById(id);
 	}
-	
+	//getOne prepara o objeto ao invés de ir até o banco de dados e pegar o id, fazendo assim ser mais eficiente o método.
 	public User update(Long id, User obj) {
-		//getOne prepara o objeto ao invés de ir até o banco de dados e pegar o id, fazendo assim ser mais eficiente o método.
 		User entity = repository.getOne(id); 
 		updateData(entity,obj);
 		return repository.save(entity);
