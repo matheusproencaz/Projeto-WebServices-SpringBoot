@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Profile;
 import com.example.aula308ProjetoWebServicesSpringBoot.entities.Category;
 import com.example.aula308ProjetoWebServicesSpringBoot.entities.Order;
 import com.example.aula308ProjetoWebServicesSpringBoot.entities.OrderItem;
+import com.example.aula308ProjetoWebServicesSpringBoot.entities.Payment;
 import com.example.aula308ProjetoWebServicesSpringBoot.entities.Product;
 import com.example.aula308ProjetoWebServicesSpringBoot.entities.User;
 import com.example.aula308ProjetoWebServicesSpringBoot.entities.enums.OrderStatus;
@@ -81,5 +82,10 @@ public class TestConfig implements CommandLineRunner/* Implementar essa interfac
 		OrderItem oi4 = new OrderItem(o3, p5, 2, p5.getPrice());
 		
 		orderItemRepository.saveAll(Arrays.asList(oi1,oi2,oi3,oi4));
+		
+		//Pra salvar um objeto dependente em uma relação 1 pra 1, você não chama o repository daquele objeto.
+		Payment pay1 = new Payment(null, Instant.parse("2019-06-20T21:53:07Z"),o1);
+		o1.setPayment(pay1);
+		orderRepository.save(o1);
 		}
 }
