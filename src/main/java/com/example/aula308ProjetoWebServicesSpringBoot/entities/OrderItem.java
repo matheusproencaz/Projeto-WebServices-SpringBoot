@@ -65,6 +65,11 @@ public class OrderItem implements Serializable{
 		this.price = price;
 	}
 
+	//É necessário botar o get na frente por conta do Java Enterprise.
+	public Double getSubTotal() {
+		return price * quantity;
+	}
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
